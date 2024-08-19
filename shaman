@@ -42,6 +42,8 @@ class shaman():
             self.version()
         elif args.command == "refresh":
             self.refresh(args.file)
+        elif args.command == "all":
+            self.get_all()
         elif args.command == "run":
             self.run(args.alias)
 
@@ -67,6 +69,9 @@ class shaman():
 
         # arguments for listing
         list_args = subparser.add_parser("list")
+
+        # arguments for listing
+        all = subparser.add_parser("all")
 
         # arguments for refresh
         refresh_args = subparser.add_parser("refresh")
@@ -184,6 +189,19 @@ class shaman():
                 print("IP", entryValue[1], end="\t")
                 print("Port", entryValue[2])
                 print("**********")
+            except KeyError as e:
+                print("Could not find an IP with the alias", e)
+            except Exception as e:
+                print("Unrecognized exception...", e)
+
+    def get_all(self):
+        data = self.readJson(self.filePath)
+
+        for k in data.keys():
+            try:
+                entryValue = data[k]
+
+                print(f"{entryValue[0]}@{entryValue[1]}:")
             except KeyError as e:
                 print("Could not find an IP with the alias", e)
             except Exception as e:
